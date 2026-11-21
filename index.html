@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<title>Book your show – Friend side (prototype)</title>
+<style>
+:root{--accent:#C72C4E;--text:#1B1D26;--text2:#4A4E5C;--border:#D5D8E0;--page:#F4F5F8;--card:#fff;
+--gbg:#E3F3E9;--g:#0F5F2F;--gok:#17803F;--abg:#FFF4D6;--a:#4A3B00;--abd:#E8D38A;--rbg:#FDECEA;--r:#8A1C14;--rbd:#F0B8B3;--rad:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#E7E9EE;color:var(--text);font-family:'DM Sans',system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px 8px 20px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.wrap{position:relative;flex:none}
+.phone{width:390px;height:844px;background:var(--page);border-radius:24px;overflow:hidden;position:absolute;top:0;left:0;transform-origin:top left;box-shadow:0 0 0 1px var(--border),0 18px 50px rgba(20,22,40,.22);display:flex;flex-direction:column}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--page)}
+.screen.white{background:#fff}
+.screen.enter{animation:in .22s ease-out}
+@keyframes in{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen.enter{animation:none}.notif{transition:none!important}.hint{animation:none!important}}
+.hdr{flex:none;padding:16px 20px;display:flex;align-items:center;gap:12px}
+.hdr.pay{background:#fff;border-bottom:1px solid var(--border)}
+.hdr .t{display:flex;flex-direction:column;min-width:0}
+.hdr .t b{font-size:18px;font-weight:700}
+.hdr .t small{font-size:13px;color:var(--text2)}
+.back{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);flex:none}
+.hdr.pay .back{background:var(--page)}
+.scroll{flex:1;min-height:0;overflow-y:auto;padding:0 20px 16px;display:flex;flex-direction:column;gap:14px}
+.scroll>*{flex-shrink:0}
+.footer{flex:none;background:#fff;border-top:1px solid var(--border);padding:12px 20px 20px;display:flex;flex-direction:column;gap:10px}
+.footer.plain{border-top:0;padding:16px 20px 28px}
+.btn{width:100%;height:52px;border-radius:var(--rad);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.back:focus-visible,.demo a:focus-visible,.lnk:focus-visible,.notif:focus-visible,.lp:focus-visible{outline:3px solid #1B1D26;outline-offset:2px}
+.btn.p{background:var(--accent);color:#fff}
+.btn.s{background:#fff;color:var(--accent);border:2px solid var(--accent);font-size:15px}
+.btn.two{height:60px;flex-direction:column;gap:1px;line-height:1.2}
+.btn.two small{font-size:12px;font-weight:500}
+.btn.dash{height:40px;border-radius:10px;border:1px dashed var(--text2);background:transparent;color:var(--text2);font-size:13px;font-weight:400}
+.note{font-size:13px;color:var(--text2);text-align:center;line-height:1.35}
+.concept{padding:12px 16px;border-radius:12px;background:var(--abg);border:1px solid var(--abd);font-size:13px;color:var(--a)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:16px}
+.card.pad0{padding:0;overflow:hidden}
+.card .tt{font-size:15px;font-weight:700}
+.banner{border-radius:var(--rad);padding:12px 14px;font-size:14px;font-weight:500;line-height:1.4;display:flex;gap:10px;align-items:flex-start}
+.banner svg{flex:none;margin-top:1px}
+.banner b{font-weight:700}
+.banner small{display:block;font-weight:400;font-size:13px;margin-top:3px}
+.banner.amber{background:var(--abg);color:var(--a);border:1px solid var(--abd)}
+.banner.red{background:var(--rbg);color:var(--r);border:1px solid var(--rbd)}
+.banner.green{background:var(--gbg);color:var(--g)}
+.invited{display:flex;align-items:center;gap:10px;font-size:15px;padding:2px 0}
+.av{width:36px;height:36px;border-radius:50%;background:#FBE3E9;color:var(--accent);font-weight:700;display:grid;place-items:center;flex:none}
+.mtop{padding:16px;display:flex;justify-content:space-between;gap:12px}
+.mcol{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mcol .h{font-size:18px;font-weight:700}
+.mcol .w{font-size:15px;font-weight:500}
+.mcol .s{font-size:14px;color:var(--text2)}
+.mprice{text-align:right;flex:none;display:flex;flex-direction:column;align-items:flex-end}
+.mprice b{font-size:24px;font-weight:700;line-height:1.1}
+.mprice span{font-size:13px;color:var(--text2)}
+.mstrip{padding:12px 16px;background:var(--gbg);display:flex;flex-direction:column;gap:2px}
+.mstrip b{font-size:14px;color:var(--g)}.mstrip span{font-size:13px}
+.timer{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.timer .l{display:flex;flex-direction:column;gap:2px}
+.timer .l small{font-size:13px;color:var(--text2)}
+.timer .l b{font-size:34px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.15}
+.timer .r{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.timer .r b{font-size:15px;font-weight:700}.timer .r small{font-size:13px;color:var(--text2)}
+.prog-t{font-size:15px;margin-bottom:10px}
+.segs{display:flex;gap:5px}
+.segs i{flex:1;height:10px;border-radius:5px;background:#E4E6EC}
+.segs i.on{background:var(--gok)}
+.rows{display:flex;flex-direction:column;gap:12px}
+.rows .row{display:flex;justify-content:space-between;gap:12px;font-size:15px;align-items:center}
+.rows .row span{color:var(--text2)}
+.rows .row b{font-weight:500;text-align:right}
+.rows hr{border:0;height:1px;background:var(--border)}
+.rows .row.tot{font-size:16px;font-weight:700}.rows .row.tot span{color:var(--text)}.rows .row.tot b{font-weight:700}
+.chip{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700}
+.chip.g{background:var(--gbg);color:var(--g)}.chip.a{background:var(--abg);color:var(--a)}.chip.r{background:var(--rbg);color:var(--r)}.chip.n{background:#E4E6EC;color:var(--text)}
+.mono{font-variant-numeric:tabular-nums}
+/* success pattern */
+.ok{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:40px 24px 8px;gap:14px;text-align:center}
+.ok>*{flex-shrink:0}
+.ok .o1{width:96px;height:96px;border-radius:48px;background:var(--gbg);display:flex;align-items:center;justify-content:center}
+.ok .o2{width:68px;height:68px;border-radius:34px;background:#1F9D55;display:flex;align-items:center;justify-content:center}
+.ok h1{font-size:24px;font-weight:700;margin-top:6px}
+.ok .sub{font-size:14px;color:var(--text2);line-height:1.4;margin-top:-6px}
+.ok .big{font-size:36px;font-weight:700;line-height:1}
+.ok .box{width:100%;background:var(--page);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.ok .box .row{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.ok .box .row span{color:var(--text2)}.ok .box .row b{font-weight:500;text-align:right}
+.ok .gnote{width:100%;background:var(--gbg);border-radius:10px;padding:10px 12px;text-align:left;font-size:14px;font-weight:500;color:var(--g);line-height:1.4}
+.ok .gnote small{display:block;font-weight:400;font-size:13px;margin-top:3px}
+.ok .box.prog .prog-t{margin-bottom:10px;font-size:14px}
+.ok .box.prog .segs i{background:#D5D8E0}.ok .box.prog .segs i.on{background:var(--gok)}
+.later-ic{width:56px;height:56px;border-radius:28px;background:var(--abg);color:var(--a);display:grid;place-items:center;flex:none}
+/* pay screen */
+.amt{flex:none;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;background:var(--abg)}
+.amt span:first-child{font-size:16px}.amt b{font-size:24px;font-weight:700}
+.lbl{font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--text2)}
+.navi{background:#fff;border:2px solid var(--accent);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.navi .top{display:flex;gap:14px;align-items:center}
+.navi .logo{width:48px;height:48px;border-radius:12px;background:#2A1B4D;display:flex;align-items:center;justify-content:center;flex:none;font-size:26px;font-weight:700;color:#fff}
+.navi .nm{display:flex;flex-direction:column;gap:2px;flex:1}.navi .nm b{font-size:20px}.navi .nm small{font-size:13px;color:var(--text2)}
+/* chat */
+.chatbar{flex:none;background:#25343B;color:#fff;display:flex;align-items:center;gap:12px;padding:16px 20px}
+.chatbar .av{background:#E8EEF0;color:#25343B;width:40px;height:40px}
+.chatbar b{display:block;font-size:16px}.chatbar small{opacity:.75;font-size:12px}
+.chatbg{flex:1;background:#EFE8DC;padding:14px 12px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.day{align-self:center;background:#fff;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--text2);box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bubble{align-self:flex-start;background:#fff;border-radius:4px 12px 12px 12px;padding:6px;max-width:92%;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.bubble>p{padding:4px 6px;font-size:15px;line-height:1.4;word-break:break-word}
+.lnk{color:#1A5FB4;text-decoration:underline;cursor:pointer;background:none;font:inherit;text-align:left}
+.lp{margin:2px 0 0;border-radius:8px;overflow:hidden;background:#F2F4F6;cursor:pointer;display:block;width:100%;text-align:left}
+.lp .top{height:78px;background:linear-gradient(135deg,#2B2F45,#C72C4E);display:flex;align-items:center;gap:10px;padding:0 14px;color:#fff}
+.lp .top b{font-size:18px}
+.lp .top .mk{width:32px;height:32px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+.lp .bd{padding:8px 12px 10px}
+.lp .bd b{display:block;font-size:14.5px}.lp .bd span{display:block;font-size:13px;color:var(--text2);margin-top:2px}
+.lp .bd em{display:block;font-size:12px;color:#6B7080;font-style:normal;margin-top:4px}
+.bubble time{display:block;text-align:right;font-size:11px;color:#6B7080;padding:2px 6px 0}
+.hint{align-self:center;margin-top:6px;background:#1B1D26;color:#fff;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:500;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.chatin{flex:none;background:#F0F0F0;padding:10px 12px 18px}
+.chatin div{background:#fff;border-radius:99px;padding:11px 16px;font-size:15px;color:#8A8F9E}
+.notif{position:absolute;top:12px;left:12px;right:12px;z-index:30;background:#fff;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(27,29,38,.18);border:1px solid var(--border);display:flex;flex-direction:column;gap:4px;text-align:left;transform:translateY(-150%);transition:transform .35s cubic-bezier(.2,.9,.3,1)}
+.notif.show{transform:none}
+.notif small{font-size:12px;color:var(--text2)}
+.notif span{font-size:16px;font-weight:700;line-height:1.3}
+.toast{position:absolute;left:20px;right:20px;top:84px;z-index:40;background:#1B1D26;color:#fff;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:500;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.tl{list-style:none;display:flex;flex-direction:column;margin-top:12px}
+.tl li{display:flex;gap:12px;position:relative;padding-bottom:14px;font-size:15px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:8px;top:20px;bottom:-2px;width:2px;background:var(--border)}
+.tl li:last-child::before{display:none}
+.dot{width:18px;height:18px;border-radius:50%;border:2px solid #9AA0B0;background:#fff;flex:none;margin-top:1px;display:grid;place-items:center}
+.tl li.sent .dot{background:var(--gok);border-color:var(--gok);color:#fff}
+.tl li.skip .dot{background:#E4E6EC}
+.tl small{display:block;color:var(--text2);font-size:13px;margin-top:2px}
+.tl .t b{font-weight:700}
+.invalid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:0 28px 60px}
+.big-ic{width:72px;height:72px;border-radius:50%;background:var(--rbg);display:grid;place-items:center;color:var(--r)}
+.invalid h2{font-size:24px;font-weight:700}.invalid p{font-size:16px;color:var(--text2);line-height:1.4}
+.demo{margin-top:14px;text-align:center;font-size:13px;color:var(--text2);max-width:420px}
+.demo>button{font-size:13px;text-decoration:underline;color:var(--text2);padding:6px 8px}
+.demo .panel{display:none;margin-top:6px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px;text-align:left}
+.demo .panel.open{display:block}
+.demo .panel p{font-size:12px;color:var(--text2);margin-bottom:4px}
+.demo .panel .g{display:flex;flex-wrap:wrap;gap:2px 14px;margin-bottom:8px}
+.demo a{font-size:13px;color:var(--text);text-decoration:underline;padding:7px 0;cursor:pointer;display:inline-block}
+.demo a[aria-pressed=true]{font-weight:700;color:var(--accent)}
+.demo .cur{font-size:12px;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="phone" id="phone">
+    <div id="app" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+    <div class="notif" id="notif" role="button" tabindex="0" data-act="notifTap" aria-label="Open reminder"><small>Book your show · now (demo notification)</small><span id="notifText"></span></div>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+</div>
+
+<div class="demo">
+  <button id="demoBtn" aria-expanded="false" aria-controls="demoPanel">Demo states</button>
+  <div class="panel" id="demoPanel">
+    <p>Pick a state. The phone jumps to it.</p>
+    <div class="g">
+      <a data-act="d-reset" tabindex="0" role="button">Start again (chat)</a>
+      <a data-act="d-ended" tabindex="0" role="button">Hold ended</a>
+      <a data-act="d-cancelled" tabindex="0" role="button">Cancelled by booker</a>
+      <a data-act="d-full" tabindex="0" role="button">All seats taken</a>
+      <a data-act="d-paid" tabindex="0" role="button">Already paid (link used)</a>
+      <a data-act="d-last10" tabindex="0" role="button">Last 10 minutes</a>
+      <a data-act="d-removed" tabindex="0" role="button">Booker removed me</a>
+      <a data-act="d-invalid" tabindex="0" role="button">Invalid link</a>
+      <a data-act="d-payfail" tabindex="0" role="button">Payment failed</a>
+    </div>
+    <p>Other demo controls</p>
+    <div class="g">
+      <a id="cashT" data-act="d-cash" tabindex="0" role="button" aria-pressed="false">Demo: booker marked me paid in cash</a>
+      <a data-act="d-notif" tabindex="0" role="button">Show reminder notification</a>
+    </div>
+    <div class="cur" id="curState"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- params ---------- */
+var P=new URLSearchParams(location.search);
+function num(k,d){var v=parseFloat(P.get(k));return isFinite(v)&&v>=0?v:d}
+function str(k,d){var v=(P.get(k)||"").replace(/[<>]/g,"").trim();return v?v.slice(0,60):d}
+var C={};
+C.host=str("host","Aarav").split(/\s+/)[0];
+C.movie=str("movie","Night Ferry");
+C.cinema=str("cinema","Lantern Street Cinema");
+C.price=Math.max(1,Math.round(num("seatPrice",340)));
+C.fee=Math.min(Math.round(num("fee",20)),C.price-1);
+C.ticket=C.price-C.fee;
+C.n=Math.max(2,Math.round(num("n",6)));
+C.slots=Math.max(1,Math.round(num("slots",C.n-1)));
+C.paid=Math.min(C.slots,Math.round(num("paid",3)));
+C.showH=num("showInHours",12);
+C.holdMin=num("holdEndsInMinutes",118);
+C.row=str("row","F");
+C.holdId=str("holdId","GH7K2NF");
+C.link=str("link","book-your-show.example/g/K7Q2-NF");
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var H=esc(C.host),MV=esc(C.movie),CN=esc(C.cinema),RW=esc(C.row);
+
+/* ---------- state (sessionStorage with try/catch) ---------- */
+var KEY="gh_friend_"+C.holdId;
+function fresh(){var t=Date.now();return{t0:t,status:"none",laterAt:null,cashPrev:"none",cond:null,payFailed:false,endAt:t+C.holdMin*60000}}
+function load(){try{var s=sessionStorage.getItem(KEY);if(s){var o=JSON.parse(s);if(o&&o.endAt)return o}}catch(e){}return null}
+var S=load()||fresh();
+function save(){try{sessionStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function showAt(){return Math.ceil((S.t0+C.showH*3600000)/900000)*900000}
+
+/* ---------- helpers ---------- */
+var D=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function dateStr(t){var d=new Date(t);return D[d.getDay()]+", "+d.getDate()+" "+M[d.getMonth()]}
+function timeStr(t){var d=new Date(t),h=d.getHours(),m=d.getMinutes(),ap=h>=12?"PM":"AM";h=h%12||12;return h+":"+(m<10?"0":"")+m+" "+ap}
+function R(n){return"₹"+n}
+function rem(){return Math.max(0,Math.floor((S.endAt-Date.now())/1000))}
+function cd(){var r=rem(),h=Math.floor(r/3600),m=Math.floor(r%3600/60),s=r%60;return(h<10?"0":"")+h+":"+(m<10?"0":"")+m+":"+(s<10?"0":"")+s}
+function done(){return S.status==="paid"||S.status==="cash"}
+function cond(){
+  if(S.cond)return S.cond;
+  if(rem()<=0)return"ended";
+  if(!done()&&C.paid>=C.slots)return"full";
+  return null;
+}
+function blockCond(){var c=cond();if((c==="full"||c==="removed")&&done())return null;return c}
+function last10(){var r=rem();return r>0&&r<=600}
+function pcount(){if(blockCond()==="full")return C.slots;return Math.min(C.slots,C.paid+(done()?1:0))}
+function paidTxt(){return pcount()+" of "+C.slots+(C.slots===1?" friend has":" friends have")+" paid"}
+function seatsTxt(){return C.slots+(C.slots===1?" seat":" seats")+" held for friends"}
+
+var I={
+back:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+check:function(s,c){return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="'+(c||"currentColor")+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'},
+clock:function(s){return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'},
+film:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></svg>',
+seat:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5M4 13a2 2 0 0 1 4 0v3h8v-3a2 2 0 0 1 4 0v5H4zM7 18v2M17 18v2"/></svg>',
+group:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0M16 5a3 3 0 0 1 0 6M18 14a6 6 0 0 1 3 6"/></svg>',
+cal:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+warn:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>',
+x:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></svg>',
+ticket:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/></svg>'
+};
+
+/* ---------- shared pieces ---------- */
+function hdr(title,sub,backAct,cls){return'<div class="hdr'+(cls?" "+cls:"")+'">'+(backAct?'<button class="back" data-act="'+backAct+'" aria-label="Back">'+I.back+'</button>':"")+'<div class="t"><b>'+title+'</b>'+(sub?'<small>'+sub+'</small>':"")+'</div></div>'}
+function when(){return dateStr(showAt())+" · "+timeStr(showAt())}
+function segs(cls){var p=pcount(),h="";for(var i=0;i<C.slots;i++)h+='<i class="'+(i<p?"on":"")+'"></i>';return'<div class="'+(cls||"card")+'"><p class="prog-t"><b>'+paidTxt()+'</b></p><div class="segs" role="img" aria-label="'+paidTxt()+'">'+h+'</div></div>'}
+function movieCard(strip){
+  return'<div class="card pad0"><div class="mtop"><div class="mcol"><span class="h">'+MV+'</span><span class="w">'+when()+'</span><span class="s">'+CN+'</span><span class="s">Row '+RW+', seats together</span></div>'+
+  '<div class="mprice"><b>'+R(C.price)+'</b><span>your share</span></div></div>'+
+  (strip?'<div class="mstrip"><b>Price is locked</b><span>Your share stays '+R(C.price)+' for 1 seat. You only pay for your own seat.</span></div>':"")+'</div>'
+}
+function detailBox(rows,prog){
+  return'<div class="box">'+rows.map(function(r){return'<div class="row"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'}).join("")+'</div>'
+}
+function banner10(){return last10()?'<div class="banner amber" role="status">'+I.warn+'<div><b>Hold ends in 10 minutes.</b> Pay now to keep your seat.</div></div>':""}
+function chip(){
+  var c=blockCond();
+  if(c==="ended")return'<span class="chip r">Hold ended</span>';
+  if(c==="cancelled")return'<span class="chip r">Cancelled</span>';
+  if(c==="removed")return'<span class="chip r">Seat released</span>';
+  if(c==="full")return'<span class="chip a">All seats taken</span>';
+  if(S.status==="paid")return'<span class="chip g">Paid</span>';
+  if(S.status==="cash")return'<span class="chip g">Paid in cash</span>';
+  if(S.status==="later")return'<span class="chip a">Pay later</span>';
+  return'<span class="chip n">Not paid yet</span>';
+}
+function tick(){return'<div class="o1"><div class="o2">'+I.check(36,"#fff")+'</div></div>'}
+
+/* ---------- screens ---------- */
+function chat(){
+  var msg="I've held "+C.n+" seats for "+MV+" on "+dateStr(showAt())+", "+timeStr(showAt())+". Pay your share to join: ";
+  return'<div class="chatbar"><span class="av" aria-hidden="true">'+esc(C.host.charAt(0).toUpperCase())+'</span><div><b>'+H+'</b><small>Chat</small></div></div>'+
+  '<div class="chatbg"><div class="day">Today</div><div class="bubble"><p>'+esc(msg)+'<button class="lnk" data-act="link">'+esc(C.link)+'</button></p>'+
+  '<button class="lp" data-act="link" aria-label="Open group seat link"><div class="top"><span class="mk" aria-hidden="true">'+I.ticket+'</span><b>Book your show</b></div><div class="bd"><b>'+MV+' · Group seats</b><span>Pay '+R(C.price)+' for your seat to join '+H+'’s group.</span><em>'+esc(C.link.split("/")[0])+'</em></div></button>'+
+  '<time>'+timeStr(Date.now()-180000)+'</time></div><div class="hint">Demo: tap the link</div></div>'+
+  '<div class="chatin"><div>Type a message</div></div>';
+}
+function invite(){
+  var later=S.status==="later";
+  return hdr("You’re invited",MV+" · "+when(),"back")+'<div class="scroll">'+banner10()+
+  '<div class="invited"><span class="av" aria-hidden="true">'+esc(C.host.charAt(0).toUpperCase())+'</span><span><b>'+H+'</b> invited you to join their group</span></div>'+
+  movieCard(true)+
+  '<div class="card timer"><div class="l"><small>Hold ends in</small><b data-cd>'+cd()+'</b></div><div class="r"><b>'+seatsTxt()+'</b><small>Ends at '+timeStr(S.endAt)+'</small></div></div>'+
+  segs()+'</div>'+
+  '<div class="footer"><button class="btn p" data-act="payNow">I’m in. Pay '+R(C.price)+' now</button>'+
+  (later?'<button class="btn s" data-act="reminders">See my reminders</button><p class="note">You chose to pay later. You only pay for your own seat.</p>':'<button class="btn s two" data-act="later">I’ll pay later<small>Your seat is kept. We’ll remind you.</small></button><p class="note">You only pay for your own seat.</p>')+'</div>';
+}
+function pay(){
+  var f=S.payFailed;
+  return hdr("Pay your share","","back","pay")+
+  '<div class="amt"><span>Amount payable</span><b>'+R(C.price)+'</b></div>'+
+  '<div class="scroll" style="padding-top:20px;gap:16px">'+
+  (f?'<div class="banner red" role="alert">'+I.x+'<div><b>Payment didn’t go through.</b> You were not charged. Try again.</div></div>':banner10())+
+  '<div class="card"><div class="rows"><div class="row"><span>1 seat · Row '+RW+'</span><b></b></div><div class="row"><span>Ticket</span><b>'+R(C.ticket)+'</b></div><div class="row"><span>Convenience fee</span><b>'+R(C.fee)+'</b></div><hr><div class="row tot"><span>Total</span><span>'+R(C.price)+'</span></div></div></div>'+
+  '<div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">RECOMMENDED</span><div class="navi"><div class="top"><div class="logo" aria-hidden="true">n</div><div class="nm"><b>Navi UPI</b><small>UPI account will be used for payment</small></div></div>'+
+  '<button class="btn p" data-act="'+(f?"retry":"confirmPay")+'">'+(f?"Retry payment":"Pay "+R(C.price)+" (demo)")+'</button></div></div>'+
+  '<p class="note">Hold ends in <b class="mono" data-cd>'+cd()+'</b></p>'+
+  '<p style="font-size:12px;color:var(--text2);text-align:center">Design concept. No real payment is taken in this prototype.</p></div>';
+}
+function success(){
+  return'<div class="ok">'+tick()+'<h1>You’re in</h1><p class="sub">Your seat is kept: Row '+RW+', together with the group.</p><span class="big">'+R(C.price)+'</span><p class="sub" style="margin-top:-8px">Paid with Navi UPI (demo)</p>'+
+  detailBox([["Movie",MV],["Cinema",CN],["Date and time",when()],["Seat","Row "+RW]])+
+  segs("box prog")+
+  '<div class="gnote">If the hold ends before the booking is made, you are refunded in full.<small>Refunds reach your UPI in 3 to 5 working days.</small></div></div>'+
+  '<div class="footer plain"><button class="btn p" data-act="details">View booking details</button></div>';
+}
+function later(){
+  var t=S.laterAt||Date.now(),ends=S.endAt,now=Date.now();
+  var items=[["Reminder 1","after 1 hour",t+3600000],["Reminder 2","30 minutes before hold ends",ends-1800000],["Final reminder","10 minutes before hold ends",ends-600000]];
+  var tl=items.map(function(it){
+    var at=it[2],cls="",sub;
+    if(at<t||at>=ends){cls="skip";sub="Not needed, hold ends sooner"}
+    else if(at<=now){cls="sent";sub="Sent at "+timeStr(at)}
+    else sub="At "+timeStr(at);
+    return'<li class="'+cls+'"><span class="dot">'+(cls==="sent"?I.check(10,"#fff"):"")+'</span><div class="t"><b>'+it[0]+':</b> '+it[1]+'<small>'+sub+'</small></div></li>';
+  }).join("");
+  return hdr("We’ll remind you",MV+" · "+when())+'<div class="scroll">'+banner10()+
+  '<div class="card" style="display:flex;gap:14px;align-items:center"><span class="later-ic">'+I.clock(28)+'</span><div><div class="tt">You chose to pay later.</div><p style="font-size:14px;color:var(--text2);margin-top:4px;line-height:1.4">Your seat is kept for now. We’ll remind you until you pay or '+H+' marks you as paid.</p></div></div>'+
+  '<div class="card timer"><div class="l"><small>Hold ends in</small><b data-cd>'+cd()+'</b></div><div class="r"><b>Your share '+R(C.price)+'</b><small>Row '+RW+', seats together</small></div></div>'+
+  '<div class="card"><div class="tt">Reminders</div><ul class="tl">'+tl+'</ul><p class="note" style="text-align:left;margin-top:12px">Reminders stop when you pay, '+H+' marks you paid, or the hold ends.</p></div>'+
+  segs()+
+  '<button class="btn s" data-act="details">View booking details</button>'+
+  '<button class="btn dash" data-act="d-notif">Demo: show reminder notification</button></div>'+
+  '<div class="footer"><button class="btn p" data-act="payNow">Pay '+R(C.price)+' now</button></div>';
+}
+function cash(){
+  return'<div class="ok">'+tick()+'<h1>Marked as paid by '+H+'</h1><p class="sub">No payment needed. Reminders have stopped.</p>'+
+  detailBox([["Movie",MV],["Cinema",CN],["Date and time",when()],["Seat","Row "+RW],["Status",chip()]])+
+  segs("box prog")+'</div>'+
+  '<div class="footer plain"><button class="btn p" data-act="details">View booking details</button></div>';
+}
+function details(){
+  var c=blockCond(),b="";
+  if(c==="ended")b='<div class="banner red">'+I.x+'<div><b>This hold has ended.</b></div></div>';
+  if(c==="cancelled")b='<div class="banner red">'+I.x+'<div><b>'+H+' cancelled this hold.</b></div></div>';
+  var row=function(a,v){return'<div class="row"><span>'+a+'</span><span style="color:var(--text);font-weight:500;text-align:right">'+v+'</span></div>'};
+  return hdr("Booking details","Hold ID "+esc(C.holdId),"back")+'<div class="scroll">'+b+
+  '<div class="card"><div class="rows">'+row("Status",chip())+row("Movie",MV)+row("Cinema",CN)+row("Date",dateStr(showAt()))+row("Show time",timeStr(showAt()))+row("Hold ends",timeStr(S.endAt))+row("Seat","Row "+RW+", together")+'<hr>'+'<div class="row tot"><span>Your price</span><span>'+R(C.price)+'</span></div></div></div>'+
+  '<div class="card"><div class="rows">'+row("Progress",pcount()+" of "+C.slots+" paid")+row("Hold ID",'<span class="mono">'+esc(C.holdId)+'</span>')+'</div></div>'+
+  '<p class="note">You only pay for your own seat.</p>'+
+  '<p style="font-size:12px;color:var(--text2);text-align:center">Design concept. No real payment is taken in this prototype.</p></div>';
+}
+function blocked(c){
+  var banner;
+  var ref="Refunds reach your UPI in 3 to 5 working days.";
+  if(c==="ended")banner='<div class="banner red" role="alert">'+I.x+'<div><b>This hold has ended.</b> The seats went back on sale. If you paid, you are refunded in full.<small>'+ref+'</small></div></div>';
+  else if(c==="cancelled")banner='<div class="banner red" role="alert">'+I.x+'<div><b>'+H+' cancelled this hold.</b> The seats went back on sale. If you paid, you are refunded in full.<small>'+ref+'</small></div></div>';
+  else if(c==="removed")banner='<div class="banner red" role="alert">'+I.x+'<div><b>Your seat was released.</b> You were not charged.</div></div>';
+  else banner='<div class="banner amber" role="alert">'+I.warn+'<div><b>All seats are taken.</b> Ask '+H+' if a seat opens up.</div></div>';
+  return hdr("Group seats",MV+" · "+when(),"back")+'<div class="scroll">'+banner+movieCard(false)+segs()+
+  '<div class="card"><div class="rows"><div class="row"><span>Status</span>'+chip()+'</div></div></div></div>'+
+  '<div class="footer"><button class="btn s" data-act="details">View booking details</button></div>';
+}
+function invalid(){
+  return hdr("Group seats","","back")+'<div class="invalid"><div class="big-ic">'+I.x.replace('width="20" height="20"','width="36" height="36"')+'</div><h2>This link isn’t working</h2><p>Ask '+H+' to send it again.</p><button class="btn s" data-act="toChat" style="margin-top:14px">Back to chat</button></div>';
+}
+
+/* ---------- navigation + render ---------- */
+var root=document.getElementById("app"),stack=["chat"],cur="chat",animate=false,lastScreen=null,lastMin=-1;
+function go(s){stack.push(s);animate=true;render()}
+function setStack(a){stack=a;animate=true;render()}
+function back(){if(stack.length>1){stack.pop();animate=true;render()}}
+function openLink(){
+  var c=blockCond(),t;
+  if(c)t="invite";else if(S.status==="paid")t="success";else if(S.status==="cash")t="cash";else if(S.status==="later")t="later";else t="invite";
+  setStack(["chat",t]);
+}
+function render(){
+  cur=stack[stack.length-1];
+  var c=blockCond(),html,fn={invite:invite,pay:pay,success:success,later:later,cash:cash};
+  if(cur==="chat")html=chat();
+  else if(c==="invalid")html=invalid();
+  else if(cur==="details")html=details();
+  else if(c)html=blocked(c);
+  else html=fn[cur]();
+  var prev=root.querySelector(".scroll"),st=prev?prev.scrollTop:0;
+  var key=cur+"|"+(c||"");
+  var white=(!c&&(cur==="success"||cur==="cash"));
+  root.innerHTML='<section class="screen'+(white?" white":"")+(animate?" enter":"")+'">'+html+'</section>';
+  var sc=root.querySelector(".scroll");
+  if(sc&&!animate&&lastScreen===key)sc.scrollTop=st;
+  lastScreen=key;animate=false;
+  updState();
+}
+function pay_(){S.status="paid";S.payFailed=false;S.cond=null;save();setStack(["chat","success"])}
+
+/* ---------- toast + notification ---------- */
+var tT,nT;
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(tT);tT=setTimeout(function(){t.classList.remove("show")},2600)}
+function showNotif(){
+  var c=blockCond();
+  if(done()){toast("No reminder: you are all paid up. Reminders have stopped.");return}
+  if(c){toast("No reminder: the hold is not active. Reminders have stopped.");return}
+  var mins=Math.max(1,Math.min(30,Math.ceil(rem()/60)));
+  document.getElementById("notifText").textContent="Seat reminder: your share is "+R(C.price)+". Hold ends in "+mins+" min.";
+  var n=document.getElementById("notif");n.classList.add("show");clearTimeout(nT);nT=setTimeout(hideNotif,6000);
+}
+function hideNotif(){document.getElementById("notif").classList.remove("show")}
+
+/* ---------- demo controls ---------- */
+function clearEnded(){S.cond=null;S.payFailed=false;if(rem()<=0)S.endAt=Date.now()+C.holdMin*60000}
+function updState(){
+  var c=blockCond(),n={ended:"Hold ended",cancelled:"Cancelled by booker",full:"All seats taken",removed:"Booker removed me",invalid:"Invalid link"};
+  var s=c?n[c]:last10()?"Last 10 minutes":"Normal";
+  var st={none:"not paid",later:"pay later",paid:"paid",cash:"paid in cash"}[S.status];
+  document.getElementById("curState").textContent="Now: "+s+" · you: "+st;
+  document.getElementById("cashT").setAttribute("aria-pressed",S.status==="cash"?"true":"false");
+}
+function act(a){
+  switch(a){
+    case"link":openLink();break;
+    case"back":back();break;
+    case"toChat":setStack(["chat"]);break;
+    case"payNow":go("pay");break;
+    case"confirmPay":pay_();break;
+    case"retry":pay_();break;
+    case"later":S.status="later";S.laterAt=Date.now();save();setStack(["chat","later"]);break;
+    case"reminders":setStack(["chat","later"]);break;
+    case"details":go("details");break;
+    case"notifTap":hideNotif();setStack(["chat","invite"]);break;
+    case"d-reset":S=fresh();save();hideNotif();setStack(["chat"]);toast("Demo reset");break;
+    case"d-ended":S.cond="ended";save();openLink();break;
+    case"d-cancelled":S.cond="cancelled";save();openLink();break;
+    case"d-full":clearEnded();if(done())S.status="none";S.cond="full";save();openLink();break;
+    case"d-removed":clearEnded();if(done())S.status="none";if(S.status!=="later"){S.status="later";S.laterAt=Date.now()}S.cond="removed";save();openLink();break;
+    case"d-invalid":S.cond="invalid";save();openLink();setStack(["chat","invite"]);break;
+    case"d-paid":clearEnded();S.status="paid";save();openLink();break;
+    case"d-last10":clearEnded();S.endAt=Date.now()+590000;save();openLink();break;
+    case"d-payfail":clearEnded();if(done())S.status="none";S.payFailed=true;save();setStack(["chat","invite","pay"]);break;
+    case"d-cash":
+      if(S.status==="paid"){toast("You already paid, so cash is not needed");break}
+      if(S.status==="cash"){S.status=S.cashPrev||"none";S.cond=null;save();openLink();break}
+      clearEnded();S.cashPrev=S.status;S.status="cash";save();openLink();break;
+    case"d-notif":showNotif();break;
+  }
+  save();updState();
+}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-act]");if(!b)return;e.preventDefault();act(b.getAttribute("data-act"))});
+document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-act][role=button]")){e.preventDefault();act(e.target.getAttribute("data-act"))}});
+var db=document.getElementById("demoBtn"),dp=document.getElementById("demoPanel");
+db.addEventListener("click",function(){var o=dp.classList.toggle("open");db.setAttribute("aria-expanded",o?"true":"false");fit()});
+
+/* ---------- fit frame to window + tick ---------- */
+var wrap=document.getElementById("wrap"),phone=document.getElementById("phone");
+function fit(){var s=Math.max(.5,Math.min(1,(innerWidth-24)/390,(innerHeight-70)/844));wrap.style.width=Math.round(390*s)+"px";wrap.style.height=Math.round(844*s)+"px";phone.style.transform="scale("+s+")"}
+addEventListener("resize",fit);fit();
+var band=null;
+function bandNow(){var r=rem();return r<=0?"end":r<=600?"last":"ok"}
+band=bandNow();
+setInterval(function(){
+  var b=bandNow();
+  if(b!==band){band=b;render();return}
+  var els=root.querySelectorAll("[data-cd]"),t=cd();
+  for(var i=0;i<els.length;i++)els[i].textContent=t;
+  var m=Math.floor(Date.now()/60000);
+  if(m!==lastMin){lastMin=m;if(cur==="later")render()}
+},1000);
+render();
+})();
+</script>
+</body>
+</html>
